@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>index</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   </head>
   <body>
@@ -11,9 +11,9 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#"><h1>BLOG</h1></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-toggler" type="a" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
+    </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -27,10 +27,10 @@
 </nav>
 <div class="d-flex justify-content-center">
 <div class="text-center" >
-<button type="button" class="btn btn-success mb-3">Create Poste</button>
+<a type="a" class="btn btn-success mb-3">Create Poste</a>
 </div>
 </div>
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center"> 
   <table class="table w-75">
   <thead>
     <tr>
@@ -42,32 +42,22 @@
     </tr>
   </thead>
   <tbody>
+    @foreach($posts as $post)
+   
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <td>{{$post['id']}}</td>
+      <td>{{$post['title']}}</td>
+      <td>{{$post['posted_by']}}</td>
+      <td>{{$post['created_at']}}</td>
       <td>
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-success">Show</button>
-          <button type="button" class="btn btn-warning">Edit</button>
-          <button type="button" class="btn btn-danger">Delete</button>
+          <a href="/posts/{{$post['id']}}" class="btn btn-info">Show</a>
+          <a href="#" class="btn btn-primary">Edit</a>
+          <a href="a" class="btn btn-danger">Delete</a>
         </div>
       </td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-success">Show</button>
-          <button type="button" class="btn btn-warning">Edit</button>
-          <button type="button" class="btn btn-danger">Delete</button>
-        </div>
-      </td>
-    </tr>
+     @endforeach
   </tbody>
 </table>
 </div>
