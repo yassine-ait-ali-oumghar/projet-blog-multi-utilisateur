@@ -28,4 +28,17 @@ class postsController extends Controller
    
       return view('posts.show',['posts'=>$singlePost]);
    }
+   public function create(){
+       return view('posts.create');
+   }
+     public function store(){
+      $data= request()->all();
+                                 
+      dd($data);
+      return to_route('posts.indexe');
+     }
+      public function edit(){
+       return view('posts.edit');
+   }
+      
 }
