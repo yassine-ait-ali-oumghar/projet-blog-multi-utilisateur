@@ -2,8 +2,9 @@
 @section('title') Update @endsection
 
 @section('content')
-<form >
+<form method="POST",action="{{route('posts.update',$post['id'])}}">
     @csrf
+    @method('PUT')
     <div class="mb-3">
         <label for="titre" class="form-label">Titre</label>
         <input 

@@ -30,7 +30,11 @@
         <div class="btn-group" role="group">
           <a href="{{route('posts.show',$post['id'])}}" class="btn btn-info">Show</a>
           <a href="{{route('posts.edit',$post['id'])}}" class="btn btn-primary">Edit</a>
-          <a href="a" class="btn btn-danger">Delete</a>
+          <form action="{{route('posts.destroy',$post['id'])}}",methode="POST">
+            @csrf
+            @method('DELETE')
+          <button type="submit" class="btn btn-danger">Delete</a>
+        </form>
         </div>
       </td>
     </tr>
