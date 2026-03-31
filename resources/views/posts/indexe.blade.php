@@ -19,21 +19,22 @@
     </tr>
   </thead>
   <tbody>
+   
     @foreach($posts as $post)
    
     <tr>
-      <td>{{$post['id']}}</td>
-      <td>{{$post['title']}}</td>
-      <td>{{$post['posted_by']}}</td>
-      <td>{{$post['created_at']}}</td>
+      <td>{{$post->id}}</td>
+      <td>{{$post->title}}</td>
+      <td>{{$post->posted_by}}</td>
+      <td>{{$post->created_at}}</td>
       <td>
         <div class="btn-group" role="group">
-          <a href="{{route('posts.show',$post['id'])}}" class="btn btn-info">Show</a>
-          <a href="{{route('posts.edit',$post['id'])}}" class="btn btn-primary">Edit</a>
-          <form action="{{route('posts.destroy',$post['id'])}}",methode="POST">
+          <a href="{{route('posts.show',$post->id)}}" class="btn btn-info">Show</a>
+          <a href="{{route('posts.edit',$post->id)}}" class="btn btn-primary">Edit</a>
+        <form action="{{route('posts.destroy',$post->id)}}" method="POST">
             @csrf
             @method('DELETE')
-          <button type="submit" class="btn btn-danger">Delete</a>
+            <button type="submit" class="btn btn-danger">Delete</button>
         </form>
         </div>
       </td>

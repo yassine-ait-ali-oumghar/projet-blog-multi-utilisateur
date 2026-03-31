@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Post;
 class postsController extends Controller
 {
    public function indexe(){
-      $allPosts =[
-         ['id' => 1, 'title' => 'PHP',        'posted_by' => 'Ahmed',   'created_at' => '2022-10-10 09:00:00'],
-        ['id' => 2, 'title' => 'Javascript', 'posted_by' => 'Mohamed', 'created_at' => '2023-08-20 07:00:00'],
-        ['id' => 3, 'title' => 'HTML',       'posted_by' => 'Mahmoud', 'created_at' => '2023-10-06 06:00:00'],
-        ['id' => 4, 'title' => 'CSS',        'posted_by' => 'Ali',     'created_at' => '2023-08-07 05:00:00'],
-    ];
+      $postsFronDB= Post::all();
       
-    return view('posts.indexe',['posts'=>$allPosts]);
+ 
+    return view('posts.indexe',['posts'=>$postsFronDB]);
    }
    public function show($postId){
-   
+    $singlePostFromDB =  Post::find($postID);
            $singlePost = [
         'title'       => 'PHP',
         'description' => 'PHP is cool language',
@@ -40,15 +36,15 @@ class postsController extends Controller
       public function edit(){
        return view('posts.edit');
    }
-      public function update(){
+      public function update($postId){
       $title = request()-> title;
        $description = request()->description;
         $postCreator = request()-> postCreator;
                                  
       dd($title,$description,$postCreator);
-      return to_route('posts.show',$post['id']);
+      return to_route('posts.show',$postId);
       }
          public function destroy(){
-      return 'we are in ';
+      return to_route('posts.indexe');
       }
 }

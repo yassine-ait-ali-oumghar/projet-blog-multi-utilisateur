@@ -21,7 +21,7 @@
             ALL Posts
           </a>
         </li>      
-      </form>
+      </ul>
     </div>
   </div>
 </nav>

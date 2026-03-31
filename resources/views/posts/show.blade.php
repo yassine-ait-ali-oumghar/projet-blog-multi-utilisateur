@@ -16,7 +16,7 @@
   <div class="card-body">
     <h5 class="card-title">Name: {{$posts['Name']}}</h5>
     <p class="card-text">Email: {{$posts['Email']}}</p>
-    <p href="#">Created at: {{$posts['created_at']}}/p>
+    <p>Created at: {{$posts['created_at']}}</p>
   </div>
 </div>
 @endsection
