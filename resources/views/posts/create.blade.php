@@ -28,9 +28,11 @@
     <div class="mb-3">
         <label for="auteur" class="form-label">Post Créé par</label>
         <select class="form-control" id="auteur" name="auteur">
-            <option value="">-- Choisir un auteur --</option>
-            <option value="Yassine">Yassine</option>
-            <option value="Mourad">Mourad</option>
+           
+            <option value="">-- Choisir un auteur --</option> 
+            @foreach($users as $user)
+            <option value="{{$user->id}}">{{$user->name}}</option>
+           @endforeach
         </select>
     </div>
 
