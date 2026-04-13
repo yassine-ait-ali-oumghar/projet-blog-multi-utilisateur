@@ -10,133 +10,68 @@ class PostController extends Controller
 {
     public function index()
     {
-        //select * from posts;
-        $postsFromDB = Post::all(); //collection object
-
-        //id, title (Var char), description(TEXT), created_at, updated_at
-
-        return view('posts.index', ['posts' => $postsFromDB]);
+        $postsFromDB = Post::with('user')->withCount('comments')->orderBy('created_at', 'desc')->get();
+        return response()->json($postsFromDB);
     }
 
-    //convention over configuration
-    public function show(Post $post) //type hinting
+    public function show($postId)
     {
-        //select * from posts where id = $postId limit 1;
-//        $singlePostFromDB = Post::find($postId); //model object
-//        $singlePostFromDB = Post::findOrFail($postId); //model object
-
-//        if(is_null($singlePostFromDB)) {
-//            return to_route('posts.index');
-//        }
-
-//        $singlePostFromDB = Post::where('id', $postId)->first(); //model object
-
-//        $singlePostFromDB = Post::where('id', $postId)->get(); //collection object
-
-
-//        Post::where('title', 'php')->first() //select * from posts where title = 'php' limit 1;
-//        Post::where('title', 'php')->get() //select * from posts where title = 'php';
-
-
-        return view('posts.show', ['post' => $post]);
+        $singlePostFromDB = Post::with('user')->findOrFail($postId);
+        return response()->json($singlePostFromDB);
     }
 
-    public function create()
+    public function store(Request $request)
     {
-        //select * from users;
-        $users = User::all();
-
-        return view('posts.create', ['users' => $users]);
-    }
-
-    public function store()
-    {
-        //code to validate the data
-
-        request()->validate([
+        $rules = [
             'title' => ['required', 'min:3'],
             'description' => ['required', 'min:5'],
             'post_creator' => ['required', 'exists:users,id'],
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        $post = Post::create([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'user_id' => $validatedData['post_creator'],
         ]);
 
-//        $request = request();
-//
-//        dd($request->title, $request->all());
-
-        //1- get the user data
-        $data = request()->all();
-
-        $title = request()->title;
-        $description = request()->description;
-        $postCreator = request()->post_creator;
-
-//        dd($data, $title, $description, $postCreator);
-
-        //2- store the submitted data in database
-//        $post = new Post;
-//
-//        $post->title = $title;
-//        $post->description = $description;
-//
-//        $post->save();// insert into posts ('t','d')
-
-        Post::create([
-            'title' => $title,
-            'description' => $description,
-            'xyz' => 'some value', //ignore,
-            'user_id' => $postCreator,
-        ]);
-
-        //3- redirection to posts.index
-        return to_route('posts.index');
+        return response()->json($post, 201);
     }
 
-    public function edit(Post $post)
+    public function update(Request $request, $postId)
     {
-        //select * from users;
-        $users = User::all();
+        $singlePostFromDB = Post::with('user')->findOrFail($postId);
 
-        return view('posts.edit', ['users' => $users, 'post' => $post]);
-    }
+        if ($request->user()->id !== $singlePostFromDB->user_id) {
+            return response()->json(['message' => 'Action non autorisée.'], 403);
+        }
 
-    public function update($postId)
-    {
-        //1- get the user data
+        $rules = [
+            'title' => ['required', 'min:3'],
+            'description' => ['required', 'min:5'],
+        ];
 
-        $title = request()->title;
-        $description = request()->description;
-        $postCreator = request()->post_creator;
+        $validatedData = $request->validate($rules);
 
-//        dd($title, $description, $postCreator);
-
-        //2- update the submitted data in database
-            //select or find the post
-            //update the post data
-        $singlePostFromDB = Post::find($postId);
         $singlePostFromDB->update([
-            'title' => $title,
-            'description' => $description,
-            'user_id' => $postCreator,
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
         ]);
 
-//        dd($singlePostFromDB);
-
-        //3- redirection to posts.show
-
-        return to_route('posts.show', $postId);
+        return response()->json($singlePostFromDB->fresh('user'));
     }
 
-    public function destroy($postId)
+    public function destroy(Request $request, $postId)
     {
-        //1- delete the post from database
-            //select or find the post
-            //delete the post from database
-        $post = Post::find($postId);
+        $post = Post::findOrFail($postId);
+
+        if ($request->user()->id !== $post->user_id) {
+            return response()->json(['message' => 'Action non autorisée.'], 403);
+        }
+
         $post->delete();
 
-      //   Post::where('id', $postId)->delete();
-
-        //2- redirect to posts.index
-        return to_route('posts.index');
+        return response()->json(null, 204);
     }
 }

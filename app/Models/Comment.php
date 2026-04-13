@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Post extends Model
+class Comment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
+        'content',
         'user_id',
+        'post_id',
     ];
 
     public function user(): BelongsTo
@@ -21,13 +21,8 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function post(): BelongsTo
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function postCreator()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Post::class);
     }
 }
