@@ -15,15 +15,15 @@ import Login from './components/auth/Login.vue';
 import Register from './components/auth/Register.vue';
 
 const routes = [
-    // PUBLIC ROUTES
+   
     { path: '/', component: Home, name: 'home', meta: { layout: 'PublicLayout' } },
     { path: '/write', component: PublicPostCreate, name: 'public.write', meta: { layout: 'PublicLayout', requiresAuth: true } },
     
-    // AUTH ROUTES (Guest Only)
+   
     { path: '/login', component: Login, name: 'login', meta: { layout: 'AuthLayout', guestOnly: true } },
     { path: '/register', component: Register, name: 'register', meta: { layout: 'AuthLayout', guestOnly: true } },
     
-    // ADMIN ROUTES (Requires Authentication AND Admin access)
+    
     { path: '/admin', component: PostIndex, name: 'admin.dashboard', meta: { layout: 'AdminLayout', requiresAuth: true, requiresAdmin: true } },
     
     { path: '/admin/posts', component: PostIndex, name: 'posts.index', meta: { layout: 'AdminLayout', requiresAuth: true, requiresAdmin: true } },
@@ -42,26 +42,26 @@ const router = createRouter({
     routes
 });
 
-// Navigation Guard
+
 router.beforeEach((to, from, next) => {
     const isAuthenticated = !!localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
     const user = userStr ? JSON.parse(userStr) : null;
     const isAdmin = user && user.email === 'admin@blog.com';
     
-    // Protect general auth
+   
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!isAuthenticated) return next('/login');
     }
     
-    // Protect Admin specific routes
+   
     if (to.matched.some(record => record.meta.requiresAdmin)) {
         if (!isAdmin) {
              return next('/'); 
         }
     }
     
-    // Redirect authenticated users trying to hit guest auth pages
+
     if (to.matched.some(record => record.meta.guestOnly)) {
         if (isAuthenticated) {
             if(isAdmin) return next('/admin');

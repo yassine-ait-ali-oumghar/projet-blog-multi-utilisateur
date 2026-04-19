@@ -21,16 +21,7 @@
             <p class="text-[#64748b] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-8">
                 Discover the latest stories, insights, and thoughts from our brilliant authors around the world.
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <div class="bg-white/80 backdrop-blur px-4 py-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2">
-                    <span class="text-lg">📄</span>
-                    <span class="text-sm font-bold text-[#0f172a]">{{ posts.length }} Articles</span>
-                </div>
-                <div class="bg-white/80 backdrop-blur px-4 py-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2">
-                    <span class="text-lg">👥</span>
-                    <span class="text-sm font-bold text-[#0f172a]">4 Auteurs</span>
-                </div>
-            </div>
+
         </div>
     </div>
 
@@ -51,16 +42,31 @@
              <div class="relative w-2 h-2 rounded-full bg-[#2563eb] animate-pulse-blue"></div>
              <span class="text-[10px] font-bold text-[#2563eb] uppercase tracking-widest">ARTICLE</span>
           </div>
-          <h2 class="text-lg font-bold text-[#0f172a] mb-3 group-hover:text-[#2563eb] transition-colors line-clamp-2 leading-snug">
+          <h2 class="text-lg font-bold text-[#0f172a] mb-3 group-hover:text-[#2563eb] transition-colors line-clamp-2 leading-snug break-words">
             {{ post.title }}
           </h2>
-          <p class="text-[#64748b] text-sm leading-relaxed mb-6 overflow-hidden line-clamp-2" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;">
-            {{ post.description }}
-          </p>
+          <div class="relative">
+            <p 
+              class="text-[#64748b] text-sm leading-relaxed mb-4 transition-all duration-300 break-all whitespace-pre-wrap"
+              :class="{ 'line-clamp-2 overflow-hidden': !post.isExpanded }"
+              :style="!post.isExpanded ? 'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' : ''"
+            >
+              {{ post.description }}
+            </p>
+            <button 
+              v-if="post.description && post.description.length > 50"
+              @click="post.isExpanded = !post.isExpanded" 
+              class="text-[#2563eb] text-[11px] font-black hover:underline mb-5 block"
+            >
+              {{ post.isExpanded ? 'Voir moins ↑' : '... Voir plus' }}
+            </button>
+          </div>
 
           <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">— {{ formatShortDate(post.created_at) }}</span>
-              <button @click="toggleComments(post)" class="text-[#2563eb] text-xs font-bold hover:underline">Lire la suite →</button>
+              <button @click="toggleComments(post)" class="text-[#2563eb] text-xs font-bold hover:underline">
+                  {{ post.showComments ? 'Masquer' : 'Commentaires →' }}
+              </button>
           </div>
 
           <div class="h-px bg-slate-100 mb-4 w-full"></div>
@@ -118,7 +124,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <p class="text-sm text-slate-600 leading-relaxed bg-white p-3 rounded-xl border border-slate-100 shadow-sm inline-block">
+                            <p class="text-sm text-slate-600 leading-relaxed bg-white p-3 rounded-xl border border-slate-100 shadow-sm inline-block break-all whitespace-pre-wrap">
                                 {{ comment.content }}
                             </p>
                         </div>
@@ -261,6 +267,7 @@ export default {
                 this.posts = response.data.map(post => ({
                     ...post,
                     showComments: false,
+                    isExpanded: false,
                     comments: [],
                     commentsLoading: false,
                     newComment: '',
