@@ -9,6 +9,7 @@ import UserCreate from './components/users/UserCreate.vue';
 import UserEdit from './components/users/UserEdit.vue';
 import UserShow from './components/users/UserShow.vue';
 import AdminNotifications from './components/admin/AdminNotifications.vue';
+import AdminDashboard from './components/admin/AdminDashboard.vue';
 
 import Home from './components/public/Home.vue';
 import Notifications from './components/public/Notifications.vue';
@@ -28,7 +29,7 @@ const routes = [
     { path: '/register', component: Register, name: 'register', meta: { layout: 'AuthLayout', guestOnly: true } },
     
     // ADMIN ROUTES (Requires Authentication AND Admin access)
-    { path: '/admin', redirect: '/admin/posts' },
+    { path: '/admin', component: AdminDashboard, name: 'admin.dashboard', meta: { layout: 'AdminLayout', requiresAuth: true, requiresAdmin: true } },
     
     { path: '/admin/posts', component: PostIndex, name: 'posts.index', meta: { layout: 'AdminLayout', requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/posts/create', component: PostCreate, name: 'posts.create', meta: { layout: 'AdminLayout', requiresAuth: true, requiresAdmin: true } },
